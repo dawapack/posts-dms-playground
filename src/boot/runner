@@ -1,0 +1,30 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Chassis\Application;
+use Chassis\Framework\Kernel;
+use PostsDMS\Providers\MessageRoutingServiceProvider;
+
+/*
+|--------------------------------------------------------------------------
+| Create The Application
+|--------------------------------------------------------------------------
+*/
+/** @var Application $app */
+$app = require __DIR__ . '/../bootstrap/app.php';
+
+/*
+|--------------------------------------------------------------------------
+| Add container aliases
+|--------------------------------------------------------------------------
+*/
+$app->addServiceProvider(new MessageRoutingServiceProvider());
+
+/*
+|--------------------------------------------------------------------------
+| Create the kernel instance in the runner context type
+|--------------------------------------------------------------------------
+*/
+(new Kernel($app))->boot();

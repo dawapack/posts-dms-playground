@@ -1,0 +1,40 @@
+version: '3.2'
+services:
+  posts:
+    image: dawapack:0.1-amqp-daemon
+    container_name: posts_development_dms
+    build:
+      dockerfile: Dockerfile
+      context: ./var/docker
+    stop_grace_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: "1g"
+    stdin_open: true
+    tty: true
+    environment:
+      ORIGIN: "eu"
+      REGION: "eu-bucharest-1"
+    volumes:
+      - type: bind
+        source: ./src
+        target: /var/www
+      - type: bind
+        source: ./var/asyncapi/src
+        target: /var/asyncapi
+  rabbitmq:
+    image: rabbitmq:3.9.0-management-alpine
+    container_name: posts_development_rabbitmq
+    restart: on-failure
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  redis:
+    image: redis:6.2-alpine
+    container_name: posts_development_redis
+    restart: on-failure
+    command: [ "redis-server", "--appendonly", "yes" ]
+    ports:
+      - "6379:6379"
