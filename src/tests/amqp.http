@@ -1,7 +1,7 @@
 #
-# Trigger create something sample without reply to
+# Trigger get post by id sync - post results can be found in JobResults.Q.Responses
 #
-POST http://localhost:15672/api/exchanges/%2f/Posts.DX.Commands/publish
+POST http://localhost:15672/api/exchanges/%2f/JobResults.DX.Commands/publish
 Authorization: Basic guest guest
 Content-Type: application/json
 
@@ -11,25 +11,26 @@ Content-Type: application/json
     "content_encoding": "UTF-8",
     "priority": 0,
     "delivery_mode": 2,
-    "correlation_id": "101a2a08-4b5f-4b43-9ee3-a4c43d920dc7",
-    "message_id": "bb1fd643-6bc6-45e4-9aff-ce0a5e354f0c",
-    "type": "createSomething",
+    "correlation_id": "2c184d70-86e8-4354-bbc7-9e6eb7e6eb5b",
+    "message_id": "556d1b82-f4af-4a46-bf79-4f9f319000e5",
+    "reply_to": "JobResults.Q.Responses",
+    "type": "getPost",
     "headers": {
-      "jobId": "eef80abf-ac7d-46ca-b273-3c6f0b001f6d",
-      "dateTime": "2022-01-01T01:20:30.400+00:00"
+      "jobId": "ebe7a6e1-9ac4-42f8-988f-1d7a4350797b",
+      "dateTime": "2022-04-01T12:13:14.156+00:00"
     }
   },
-  "routing_key": "Posts.RK.CommandFireAndForget",
-  "payload": "{}",
+  "routing_key": "Posts.RK.Request",
+  "payload": "{\"pathParams\":{\"postId\":\"f473c50e-6119-4dec-854b-8f2eb3b8841f\"}}",
   "payload_encoding": "string"
 }
 
 ###
 
 #
-# Trigger get something sample
+# Trigger create post sync - operation result can be found in JobResults.Q.Responses
 #
-POST http://localhost:15672/api/exchanges/%2f/Posts.DX.RpcCommands/publish
+POST http://localhost:15672/api/exchanges/%2f/JobResults.DX.Commands/publish
 Authorization: Basic guest guest
 Content-Type: application/json
 
@@ -39,26 +40,26 @@ Content-Type: application/json
     "content_encoding": "UTF-8",
     "priority": 0,
     "delivery_mode": 2,
-    "correlation_id": "201a2a08-4b5f-4b43-9ee3-a4c43d920dc7",
-    "reply_to": "DeadLetter.Q.Jobs",
-    "message_id": "bb1fd643-6bc6-45e4-9aff-ce0a5e354f0c",
-    "type": "getSomething",
+    "correlation_id": "9d7e8fd8-7fa5-4393-91f3-9ad35bd94706",
+    "message_id": "c88a370f-af82-4d21-8089-dcaba11e2d56",
+    "reply_to": "JobResults.Q.Responses",
+    "type": "createPost",
     "headers": {
-      "jobId": "eef80abf-ac7d-46ca-b273-3c6f0b001f6d",
-      "dateTime": "2022-01-01T01:20:30.400+00:00"
+      "jobId": "0734cceb-4da9-4f73-b6a2-87481ec435bb",
+      "dateTime": "2022-04-01T12:13:14.156+00:00"
     }
   },
-  "routing_key": "Posts.RK.CommandLoopback",
-  "payload": "{}",
+  "routing_key": "Posts.RK.Request",
+  "payload": "{\"authorId\":\"92ca2218-642a-4f57-a647-d42b7212aec6\",\"content\":\"Create post having valid data!\"}",
   "payload_encoding": "string"
 }
 
 ###
 
 #
-# Trigger route not found with reply to
+# Trigger update post sync - operation result can be found in JobResults.Q.Responses
 #
-POST http://localhost:15672/api/exchanges/%2f/Posts.DX.RpcCommands/publish
+POST http://localhost:15672/api/exchanges/%2f/JobResults.DX.Commands/publish
 Authorization: Basic guest guest
 Content-Type: application/json
 
@@ -68,26 +69,27 @@ Content-Type: application/json
     "content_encoding": "UTF-8",
     "priority": 0,
     "delivery_mode": 2,
-    "correlation_id": "301a2a08-4b5f-4b43-9ee3-a4c43d920dc7",
-    "reply_to": "DeadLetter.Q.Jobs",
-    "message_id": "bb1fd643-6bc6-45e4-9aff-ce0a5e354f0c",
-    "type": "routeNotFound",
+    "correlation_id": "9287b2e0-43cf-4e65-b79e-4e42aa84e084",
+    "message_id": "9c734e79-d090-4465-9f76-fa97f3bbceb5",
+    "reply_to": "JobResults.Q.Responses",
+    "type": "updatePost",
     "headers": {
-      "jobId": "eef80abf-ac7d-46ca-b273-3c6f0b001f6d",
-      "dateTime": "2022-01-01T01:20:30.400+00:00"
+      "jobId": "19efb6fc-1649-43d6-a1e1-a9ad6b25496b",
+      "dateTime": "2022-04-01T12:13:14.156+00:00",
+      "x_postId": "f473c50e-6119-4dec-854b-8f2eb3b8841f"
     }
   },
-  "routing_key": "Posts.RK.CommandLoopback",
-  "payload": "{}",
+  "routing_key": "Posts.RK.Request",
+  "payload": "{\"authorId\":\"92ca2218-642a-4f57-a647-d42b7212aec6\",\"content\":\"Update post and send event to AuthorsDMS - retry 2\"}",
   "payload_encoding": "string"
 }
 
 ###
 
 #
-# Trigger route not found without reply to
+# Trigger delete post sync - operation result can be found in JobResults.Q.Responses
 #
-POST http://localhost:15672/api/exchanges/%2f/Posts.DX.RpcCommands/publish
+POST http://localhost:15672/api/exchanges/%2f/JobResults.DX.Commands/publish
 Authorization: Basic guest guest
 Content-Type: application/json
 
@@ -97,15 +99,18 @@ Content-Type: application/json
     "content_encoding": "UTF-8",
     "priority": 0,
     "delivery_mode": 2,
-    "correlation_id": "401a2a08-4b5f-4b43-9ee3-a4c43d920dc7",
-    "message_id": "bb1fd643-6bc6-45e4-9aff-ce0a5e354f0c",
-    "type": "routeNotFound",
+    "correlation_id": "77347148-5f88-43d5-8d23-15f67386e8e8",
+    "message_id": "4ec8e22b-d1e6-4de1-ad04-5f188c113302",
+    "reply_to": "JobResults.Q.Responses",
+    "type": "deletePost",
     "headers": {
-      "jobId": "eef80abf-ac7d-46ca-b273-3c6f0b001f6d",
-      "dateTime": "2022-01-01T01:20:30.400+00:00"
+      "jobId": "035e3a6f-3e79-4eda-adee-bd6d7687730c",
+      "dateTime": "2022-04-01T12:13:14.156+00:00"
     }
   },
-  "routing_key": "Posts.RK.CommandLoopback",
-  "payload": "{}",
+  "routing_key": "Posts.RK.Request",
+  "payload": "{\"pathParams\":{\"postId\":\"f473c50e-6119-4dec-854b-8f2eb3b8841f\"},\"queryParams\":{\"authorId\":\"92ca2218-642a-4f57-a647-d42b7212aec6\"}}",
   "payload_encoding": "string"
 }
+
+###

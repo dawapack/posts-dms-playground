@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2022-04-08
+
+### Added
+
+- Add validator and rules per operation
+- Complete posts handlers
+- Create outbound adapters
+  - events to authors microservices
+  - get author information (sync over async)
+
 ## [0.1.0] - 2022-04-04
 
 ### Added

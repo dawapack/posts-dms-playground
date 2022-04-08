@@ -6,21 +6,21 @@ namespace PostsDMS\OutboundAdapters;
 
 use Chassis\Framework\Adapters\Operations\AbstractOperationsAdapter;
 
-class DemoOperationDeletedEvents extends AbstractOperationsAdapter
+class PostDeletedEvent extends AbstractOperationsAdapter
 {
     /**
      * Use a dedicated channel for events calls - fire and forget call type
      *
      * @var string
      */
-    protected string $channelName = "outbound/events";
+    protected string $channelName = "posts/outbound/events";
 
     /**
      * Events must provide the routing key - see exchange bindings of the channel
      *
      * @var string
      */
-    protected string $routingKey = "Posts.RK.EventLoopback";
+    protected string $routingKey = "";
 
     /**
      * To be more specific, we can set the message type here and will be filled by the
@@ -28,5 +28,5 @@ class DemoOperationDeletedEvents extends AbstractOperationsAdapter
      *
      * @var string
      */
-    protected string $operation = "somethingDeleted";
+    protected string $operation = "postDeleted";
 }

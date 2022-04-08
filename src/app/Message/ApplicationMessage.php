@@ -16,7 +16,7 @@ class ApplicationMessage implements ApplicationMessageInterface
      */
     public function __construct(array $body, array $headers = [])
     {
-        $this->payload["items"] = [$body];
+        $this->payload["items"] = $body;
         $this->headers = $headers;
     }
 

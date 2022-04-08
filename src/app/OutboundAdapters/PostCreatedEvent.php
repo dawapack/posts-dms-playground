@@ -6,21 +6,21 @@ namespace PostsDMS\OutboundAdapters;
 
 use Chassis\Framework\Adapters\Operations\AbstractOperationsAdapter;
 
-class DemoOperationDelete extends AbstractOperationsAdapter
+class PostCreatedEvent extends AbstractOperationsAdapter
 {
     /**
-     * Use a dedicated channel for commands calls - fire and forget call type
+     * Use a dedicated channel for events calls - fire and forget call type
      *
      * @var string
      */
-    protected string $channelName = "outbound/commands";
+    protected string $channelName = "posts/outbound/events";
 
     /**
-     * Fire and forget must provide the routing key - see exchange bindings of the channel
+     * Events must provide the routing key - see exchange bindings of the channel
      *
      * @var string
      */
-    protected string $routingKey = "Posts.RK.CommandFireAndForget";
+    protected string $routingKey = "";
 
     /**
      * To be more specific, we can set the message type here and will be filled by the
@@ -28,5 +28,5 @@ class DemoOperationDelete extends AbstractOperationsAdapter
      *
      * @var string
      */
-    protected string $operation = "deleteSomething";
+    protected string $operation = "postCreated";
 }

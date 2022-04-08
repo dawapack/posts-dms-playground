@@ -1,8 +1,8 @@
 asyncapi: 2.2.0
 info:
-  title: Posts AsyncAPI sample definitions
+  title: Infrastructure definitions
   version: 0.1.0
-  description: This sample data below shows the Posts DMS definitions
+  description: This contract will be used by infrastructure thread to declare exchanges, queues and bindings
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -23,7 +23,7 @@ channels:
         exchange:
           name: ''
           type: direct
-          durable: true
+          durable: false
           autoDelete: false
           vhost: /
     publish:
@@ -42,7 +42,7 @@ channels:
         is: queue
         queue:
           name: DeadLetter.Q.Jobs
-          durable: true
+          durable: false
           exclusive: false
           autoDelete: false
           vhost: /
@@ -55,19 +55,20 @@ channels:
           amqp:
             contentEncoding: UTF-8
             messageType: '#any'
-  rpc/outbound/commands:
+  jobresults/outbound/commands:
     bindings:
       amqp:
         is: routingKey
         exchange:
-          name: Posts.DX.RpcCommands
+          name: JobResults.DX.Commands
           type: direct
-          durable: true
+          durable: false
           autoDelete: false
           vhost: /
     publish:
       bindings:
         amqp:
+          cc: [ ]
           deliveryMode: 2
           mandatory: false
       message:
@@ -75,19 +76,83 @@ channels:
           amqp:
             contentEncoding: UTF-8
             messageType: '#any'
-  outbound/commands:
+  authors/outbound/commands:
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: Authors.DX.Commands
+          type: direct
+          durable: false
+          autoDelete: false
+          vhost: /
+    publish:
+      bindings:
+        amqp:
+          cc: [ ]
+          deliveryMode: 2
+          mandatory: false
+      message:
+        bindings:
+          amqp:
+            contentEncoding: UTF-8
+            messageType: '#any'
+  authors/outbound/responses:
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: Authors.DX.Responses
+          type: direct
+          durable: false
+          autoDelete: false
+          vhost: /
+    publish:
+      bindings:
+        amqp:
+          cc: [ ]
+          deliveryMode: 2
+          mandatory: false
+      message:
+        bindings:
+          amqp:
+            contentEncoding: UTF-8
+            messageType: '#any'
+  authors/outbound/events:
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: Authors.FX.Events
+          type: fanout
+          durable: false
+          autoDelete: false
+          vhost: /
+    publish:
+      bindings:
+        amqp:
+          cc: [ ]
+          deliveryMode: 2
+          mandatory: false
+      message:
+        bindings:
+          amqp:
+            contentEncoding: UTF-8
+            messageType: '#any'
+  posts/outbound/commands:
     bindings:
       amqp:
         is: routingKey
         exchange:
           name: Posts.DX.Commands
           type: direct
-          durable: true
+          durable: false
           autoDelete: false
           vhost: /
     publish:
       bindings:
         amqp:
+          cc: [ ]
           deliveryMode: 2
           mandatory: false
       message:
@@ -95,13 +160,55 @@ channels:
           amqp:
             contentEncoding: UTF-8
             messageType: '#any'
-  inbound/commands:
+  posts/outbound/responses:
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: Posts.DX.Responses
+          type: direct
+          durable: false
+          autoDelete: false
+          vhost: /
+    publish:
+      bindings:
+        amqp:
+          cc: [ ]
+          deliveryMode: 2
+          mandatory: false
+      message:
+        bindings:
+          amqp:
+            contentEncoding: UTF-8
+            messageType: '#any'
+  posts/outbound/events:
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: Posts.FX.Events
+          type: fanout
+          durable: false
+          autoDelete: false
+          vhost: /
+    publish:
+      bindings:
+        amqp:
+          cc: [ ]
+          deliveryMode: 2
+          mandatory: false
+      message:
+        bindings:
+          amqp:
+            contentEncoding: UTF-8
+            messageType: '#any'
+  jobresults/inbound/responses:
     bindings:
       amqp:
         is: queue
         queue:
-          name: Posts.Q.Commands
-          durable: true
+          name: JobResults.Q.Responses
+          durable: false
           exclusive: false
           autoDelete: false
           vhost: /
@@ -109,8 +216,8 @@ channels:
       bindings:
         amqp:
           cc: [
-              'Posts.DX.RpcCommands|Posts.RK.CommandLoopback',
-              'Posts.DX.Commands|Posts.RK.CommandFireAndForget'
+              'Posts.DX.Responses|JobResults.RK.Response',
+              'Authors.DX.Responses|JobResults.RK.Response',
           ]
           ack: true
       message:
@@ -118,80 +225,126 @@ channels:
           amqp:
             contentEncoding: UTF-8
             messageType: '#any'
-  outbound/responses:
-    bindings:
-      amqp:
-        is: routingKey
-        exchange:
-          name: Posts.DX.Responses
-          type: direct
-          durable: true
-          autoDelete: false
-          vhost: /
-    publish:
-      bindings:
-        amqp:
-          deliveryMode: 2
-          mandatory: false
-      message:
-        bindings:
-          amqp:
-            contentEncoding: UTF-8
-            messageType: '#any'
-  inbound/responses:
+  authors/inbound/commands:
     bindings:
       amqp:
         is: queue
         queue:
-          name: Posts.Q.Responses
-          durable: true
+          name: Authors.Q.Commands
+          durable: false
           exclusive: false
           autoDelete: false
           vhost: /
     subscribe:
       bindings:
         amqp:
-          cc: [ 'Posts.DX.Responses|Posts.RK.ResponseLoopback' ]
+          cc: [
+              'Posts.DX.Commands|Authors.RK.Request',
+              'JobResults.DX.Commands|Authors.RK.Request'
+          ]
           ack: true
       message:
         bindings:
           amqp:
             contentEncoding: UTF-8
             messageType: '#any'
-  outbound/events:
-    bindings:
-      amqp:
-        is: routingKey
-        exchange:
-          name: Posts.FX.Events
-          type: fanout
-          durable: true
-          autoDelete: false
-          vhost: /
-    publish:
-      bindings:
-        amqp:
-          deliveryMode: 2
-          mandatory: false
-      message:
-        bindings:
-          amqp:
-            contentEncoding: UTF-8
-            messageType: '#any'
-  inbound/events:
+  authors/inbound/responses:
     bindings:
       amqp:
         is: queue
         queue:
-          name: Posts.Q.Events
-          durable: true
+          name: Authors.Q.Responses
+          durable: false
           exclusive: false
           autoDelete: false
           vhost: /
     subscribe:
       bindings:
         amqp:
-          cc: [ 'Posts.FX.Events|Posts.RK.EventLoopback' ]
+          cc: [ 'Posts.DX.Responses|Authors.RK.Response' ]
+          ack: true
+      message:
+        bindings:
+          amqp:
+            contentEncoding: UTF-8
+            messageType: '#any'
+  authors/inbound/events:
+    bindings:
+      amqp:
+        is: queue
+        queue:
+          name: Authors.Q.Events
+          durable: false
+          exclusive: false
+          autoDelete: false
+          vhost: /
+    subscribe:
+      bindings:
+        amqp:
+          cc: [ 'Posts.FX.Events|Authors.RK.Event' ]
+          ack: true
+      message:
+        bindings:
+          amqp:
+            contentEncoding: UTF-8
+            messageType: '#any'
+  posts/inbound/commands:
+    bindings:
+      amqp:
+        is: queue
+        queue:
+          name: Posts.Q.Commands
+          durable: false
+          exclusive: false
+          autoDelete: false
+          vhost: /
+    subscribe:
+      bindings:
+        amqp:
+          cc: [
+              'Authors.DX.Commands|Posts.RK.Request',
+              'JobResults.DX.Commands|Posts.RK.Request',
+          ]
+          ack: true
+      message:
+        bindings:
+          amqp:
+            contentEncoding: UTF-8
+            messageType: '#any'
+  posts/inbound/responses:
+    bindings:
+      amqp:
+        is: queue
+        queue:
+          name: Posts.Q.Responses
+          durable: false
+          exclusive: false
+          autoDelete: false
+          vhost: /
+    subscribe:
+      bindings:
+        amqp:
+          cc: [ 'Authors.DX.Responses|Posts.RK.Response' ]
+          ack: true
+      message:
+        bindings:
+          amqp:
+            contentEncoding: UTF-8
+            messageType: '#any'
+  posts/inbound/events:
+    bindings:
+      amqp:
+        is: queue
+        queue:
+          name: Posts.Q.Events
+          durable: false
+          exclusive: false
+          autoDelete: false
+          vhost: /
+    subscribe:
+      bindings:
+        amqp:
+          cc: [ 'Authors.FX.Events|Posts.RK.Event' ]
           ack: true
       message:
         bindings:

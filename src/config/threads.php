@@ -54,17 +54,17 @@ return [
     */
     'worker' => [
         'channels' => [
-            'inbound/commands' => [
+            'posts/inbound/commands' => [
                 'minimum' => 10,
                 'maximum' => 50,
                 'enabled' => true,
             ],
-            'inbound/responses' => [
+            'posts/inbound/responses' => [
                 'minimum' => 3,
                 'maximum' => 50,
                 'enabled' => true,
             ],
-            'inbound/events' => [
+            'posts/inbound/events' => [
                 'minimum' => 3,
                 'maximum' => 50,
                 'enabled' => true,
