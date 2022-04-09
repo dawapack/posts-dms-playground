@@ -6,7 +6,7 @@ namespace PostsDMS\OutboundAdapters;
 
 use Chassis\Framework\Adapters\Operations\AbstractOperationsAdapter;
 
-class GetAuthorInfoData extends AbstractOperationsAdapter
+class GetAuthorData extends AbstractOperationsAdapter
 {
     /**
      * Enable sync over async mode
@@ -27,5 +27,5 @@ class GetAuthorInfoData extends AbstractOperationsAdapter
      *
      * @var string
      */
-    protected string $operation = "getAuthorInfo";
+    protected string $operation = "getAuthor";
 }

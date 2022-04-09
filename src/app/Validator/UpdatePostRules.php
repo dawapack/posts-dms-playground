@@ -12,18 +12,15 @@ class UpdatePostRules extends AbstractMessageValidator
     protected array $rules = [
         'payload.authorId' => self::UUID_REGEX_RULE,
         'payload.content' => 'required|between:16,65000',
-        'headers.jobId' => self::UUID_REGEX_RULE,
-        'headers.x_postId' => self::UUID_REGEX_RULE,
+        'headers.x_pathParam_postId' => self::UUID_REGEX_RULE,
     ];
     protected array $messages = [
-        'payload.authorId:required' => 'payload authorId property is required',
-        'payload.authorId' => 'payload authorId property format is not valid',
-        'payload.content:required' => 'payload content property is required',
-        'payload.content:between' => 'payload content length must be between 16 and 65000 characters',
-        'payload.content' => 'payload content format is not valid',
-        'headers.x_postId:required' => 'post id path property is required',
-        'headers.x_postId' => 'post id path property format is not valid',
-        'headers.jobId:required' => 'jobId header property is required',
-        'headers.jobId' => 'jobId header property format is not valid',
+        'payload.authorId:required' => 'author id is required',
+        'payload.authorId' => 'author id format is not valid',
+        'payload.content:required' => 'content is required',
+        'payload.content:between' => 'content length is not between 16 and 65000 characters',
+        'payload.content' => 'content is not valid',
+        'headers.x_pathParam_postId:required' => 'post id is required',
+        'headers.x_pathParam_postId' => 'post id format is not valid',
     ];
 }

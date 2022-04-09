@@ -6,6 +6,6 @@ namespace PostsDMS\Exceptions;
 
 use Exception;
 
-class PostNotFoundException extends Exception
+class NotFoundException extends Exception
 {
 }
