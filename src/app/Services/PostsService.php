@@ -9,6 +9,7 @@ use Chassis\Framework\Adapters\Message\OutboundMessage;
 use Chassis\Framework\Logger\Logger;
 use Chassis\Framework\Services\AbstractService;
 use DateTime;
+use Exception;
 use PostsDMS\Exceptions\NotFoundException;
 use PostsDMS\Message\ApplicationEventMessage;
 use PostsDMS\Message\ApplicationMessage;
@@ -53,9 +54,22 @@ class PostsService extends AbstractService
                 );
             }
             $id = ($this->message->getBody())["pathParams"]["postId"];
+            $postData = $this->repository->getItem($id);
+
+            // get author
+            $getAuthorResponse = $this->send(
+                'getAuthor',
+                new ApplicationEventMessage(['pathParams' => ['authorId' => $postData['authorId']]])
+            );
+            if (is_null($getAuthorResponse) || (int)$getAuthorResponse->getHeader('statusCode') !== 200) {
+                throw new Exception("get author data fail");
+            }
 
             return $this->response(
-                new ApplicationMessage([$this->repository->getItem($id)]), 200, "DONE"
+                (new ApplicationMessage($postData))
+                    ->setMetaData($getAuthorResponse->getBody()['items'][0]),
+                200,
+                "DONE"
             );
         } catch (NotFoundException $reason) {
             return $this->response(

@@ -37,13 +37,17 @@ class EventsService
     public function __invoke(InboundMessageInterface $message): void
     {
         $this->message = $message;
-        switch ($this->message->getHeader('type')) {
+        switch ($this->message->getProperty('type')) {
+            case "authorCreated":
+            case "authorUpdated":
+                // nothing to do - just skip
+                break;
             case "authorDeleted":
                 $this->deleteRelatedPosts();
                 break;
             default:
                 Logger::info(
-                    'got unknown event type',
+                    'got unhandled event type',
                     [
                         'component' => 'post_events_service_info',
                         'message' => [
@@ -73,7 +77,7 @@ class EventsService
             // delete all posts associated to author
             $this->repository
                 ->deleteAuthorPosts(
-                    ($this->message->getBody())["pathParams"]["authorId"]
+                    ($this->message->getBody())["authorId"]
                 );
         } catch (BadRequestException $reason) {
             Logger::emergency(
