@@ -9,7 +9,7 @@ use PostsDMS\OutboundAdapters\GetAuthorData;
 use PostsDMS\OutboundAdapters\PostCreatedEvent;
 use PostsDMS\OutboundAdapters\PostDeletedEvent;
 use PostsDMS\OutboundAdapters\PostUpdatedEvent;
-use PostsDMS\Services\AuthorEventsService;
+use PostsDMS\Services\EventsService;
 use PostsDMS\Services\PostsService;
 
 class MessageRoutingServiceProvider extends RoutingServiceProvider
@@ -25,10 +25,9 @@ class MessageRoutingServiceProvider extends RoutingServiceProvider
         'deletePost' => [PostsService::class, 'delete'],
 
         // events
-        'authorCreated' => AuthorEventsService::class,
-        'authorUpdated' => AuthorEventsService::class,
-        'authorDeleted' => AuthorEventsService::class,
-
+        'authorCreated' => EventsService::class,
+        'authorUpdated' => EventsService::class,
+        'authorDeleted' => EventsService::class,
     ];
 
     /**

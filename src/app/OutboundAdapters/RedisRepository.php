@@ -103,4 +103,25 @@ class RedisRepository implements RepositoryInterface
         $key = $this->cache->keyPrefix() . "author." . $values['authorId'];
         $this->cache->client()->lrem($key, $id, 0);
     }
+
+    /**
+     * @param string $id
+     *
+     * @return void
+     */
+    public function deleteAuthorPosts(string $id): void
+    {
+        $key = $this->cache->keyPrefix() . "author." . $id;
+        $posts = $this->cache->client()->lrange($key, 0, -1);
+
+        // delete each post
+        foreach ($posts as $postId) {
+            $this->cache
+                ->client()
+                ->del($this->cache->keyPrefix() . $postId);
+        }
+
+        // finally, delete list
+        $this->cache->client()->del($key);
+    }
 }

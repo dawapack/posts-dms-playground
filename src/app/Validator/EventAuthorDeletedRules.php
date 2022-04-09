@@ -6,14 +6,14 @@ namespace PostsDMS\Validator;
 
 use PostsDMS\Message\AbstractMessageValidator;
 
-class DeletePostRules extends AbstractMessageValidator
+class EventAuthorDeletedRules extends AbstractMessageValidator
 {
     // https://github.com/rakit/validation/tree/v1.4.0#available-rules
     protected array $rules = [
-        'payload.pathParams.postId' => self::UUID_REGEX_RULE,
+        'payload.authorId' => self::UUID_REGEX_RULE,
     ];
     protected array $messages = [
-        'payload.pathParams.postId:required' => 'post id is required',
-        'payload.pathParams.postId' => 'post id format is not valid',
+        'payload.authorId:required' => 'author id is required',
+        'payload.authorId' => 'author id format is not valid',
     ];
 }
